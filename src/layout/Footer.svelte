@@ -24,7 +24,7 @@
     font-weight: 400;
   }
   .link {
-    color: black;
+    color: #333;
     font-size: 1.2rem;
     font-weight: 700;
     text-transform: capitalize;

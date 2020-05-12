@@ -1,3 +1,7 @@
+<script>
+  import { Header } from "../layout/modules";
+</script>
+
 <style>
   main {
     position: relative;
@@ -10,5 +14,6 @@
 </style>
 
 <main>
+  <Header />
   <slot />
 </main>
