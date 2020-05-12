@@ -1,5 +1,13 @@
 <script>
-  let data = {};
+  import { afterUpdate, createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  export let data = {};
+
+  function dispatchData() {
+    dispatch("send", data);
+  }
 </script>
 
 <style>
@@ -30,14 +38,14 @@
   }
   label {
     font-size: 14px;
-    color: black;
+    color: #333;
     opacity: 0.5;
   }
   .submit {
     padding: 0.75rem;
-    border: 1px solid black;
+    border: 1px solid #333;
     width: 120px;
-    background: linear-gradient(to right, black 50%, white 50%);
+    background: linear-gradient(to right, #333 50%, white 50%);
     background-size: 200% 100%;
     background-position: right bottom;
     transition: all 0.4s ease-in-out;
@@ -52,7 +60,7 @@
     color: white;
   }
   .text {
-    color: black;
+    color: #333;
     transition: all 0.5s ease-in-out;
     display: block;
   }
@@ -62,26 +70,24 @@
 </style>
 
 <div class="form-wrapper">
-  <form name="contact" method="POST" data-netlify="true">
-    <div class="form-group">
-      <label for={data.name}>Name</label>
-      <input type="text" bind:value={data.name} required />
-    </div>
-    <div class="form-group">
-      <label for={data.email}>Email</label>
-      <input type="email" bind:value={data.email} required />
-    </div>
-    <div class="form-group">
-      <label for={data.subject}>Subject</label>
-      <input type="text" bind:value={data.subject} required />
-    </div>
-    <div class="form-group">
-      <label for={data.message}>Message</label>
-      <textarea rows={5} bind:value={data.message} required />
-    </div>
+  <div class="form-group">
+    <label for={data.name}>Name</label>
+    <input type="text" bind:value={data.name} required />
+  </div>
+  <div class="form-group">
+    <label for={data.email}>Email</label>
+    <input type="email" bind:value={data.email} required />
+  </div>
+  <div class="form-group">
+    <label for={data.subject}>Subject</label>
+    <input type="text" bind:value={data.subject} required />
+  </div>
+  <div class="form-group">
+    <label for={data.message}>Message</label>
+    <textarea rows={5} bind:value={data.message} required />
+  </div>
 
-    <button class="submit" type="submit">
-      <span class="text">Send &rarr;</span>
-    </button>
-  </form>
+  <button class="submit" on:click={dispatchData}>
+    <span class="text">Send &rarr;</span>
+  </button>
 </div>

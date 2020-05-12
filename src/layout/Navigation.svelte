@@ -8,9 +8,10 @@
 <style>
   nav {
     position: absolute;
+    padding: 2rem;
     top: 50%;
-    left: 10%;
-    transform: translate(-10%, -50%);
+    left: 0;
+    transform: translate(0, -50%);
   }
   .index-number {
     font-size: 1rem;
@@ -18,7 +19,7 @@
   }
   .link {
     margin: 0 0.5rem;
-    color: black;
+    color: #333;
     font-size: 4rem;
     font-weight: bolder;
     text-transform: capitalize;
