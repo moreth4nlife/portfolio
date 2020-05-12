@@ -1,3 +1,7 @@
+<script>
+  import { Navigation, Footer } from "../layout/modules";
+</script>
+
 <style>
 
 </style>
@@ -6,4 +10,4 @@
   <title>Home | Marcos Alves</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<Navigation />
