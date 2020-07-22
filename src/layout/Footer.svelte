@@ -45,6 +45,12 @@
       font-size: 1rem;
     }
   }
+
+  @media screen and (max-width: 667px) {
+    footer {
+      position: relative;
+    }
+  }
   .py-1:first-child {
     padding: 0 1rem 0 0;
   }

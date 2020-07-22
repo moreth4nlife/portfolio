@@ -75,3 +75,15 @@ code {
 .pc-user .blue {
   color: #0b08b0;
 }
+
+@media screen and (max-width: 667px) {
+  .content-wrapper {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 2rem 0;
+    padding: 0;
+    width: 100%;
+    transform: none;
+  }
+}
