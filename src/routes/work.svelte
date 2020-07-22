@@ -43,6 +43,12 @@
   ul li {
     margin: 15px 0;
   }
+  @media screen and (max-width: 667px) {
+    .list-block {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 </style>
 
 <svelte:head>

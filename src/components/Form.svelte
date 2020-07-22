@@ -67,6 +67,17 @@
   .text:hover {
     color: white;
   }
+
+  @media screen and (max-width: 667px) {
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: auto;
+    }
+  }
 </style>
 
 <div class="form-wrapper">
