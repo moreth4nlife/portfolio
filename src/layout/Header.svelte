@@ -7,7 +7,7 @@
   .logo {
     width: 80px;
     height: 80px;
-    background: url("/image/favicon.svg") no-repeat center;
+    background: url("/images/favicon.svg") no-repeat center;
     background-size: cover;
     animation: fadeIn 1s ease-in-out;
     transition: all 0.5s ease-in-out;

@@ -2,7 +2,7 @@
   import { goto } from "@sapper/app";
   import { fly, fade } from "svelte/transition";
 
-  const links = ["home", "about", "work", "contact"];
+  const links = ["home", "about", "work", "projects", "contact"];
 </script>
 
 <style>

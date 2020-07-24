@@ -4,7 +4,7 @@
 
   export let page;
 
-  const links = ["home", "about", "work", "contact"];
+  const links = ["home", "about", "work", "projects", "contact"];
 </script>
 
 <style>

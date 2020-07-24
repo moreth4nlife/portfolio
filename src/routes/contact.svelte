@@ -1,15 +1,8 @@
 <script>
   import { goto } from "@sapper/app";
   import { fade } from "svelte/transition";
-  import Typewriter from "svelte-typewriter";
   import { Footer } from "../layout/modules";
   import { Form } from "../components/components";
-
-  let data = {};
-
-  function save(event) {
-    data = event.detail;
-  }
 </script>
 
 <style>
