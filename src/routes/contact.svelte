@@ -33,11 +33,6 @@
     font-weight: bolder;
     text-transform: none;
   }
-  @media screen and (min-width: 768px) {
-    .form {
-      width: 50%;
-    }
-  }
   @media screen and (max-width: 667px) {
     h2 {
       font-size: 1.25rem;
@@ -68,10 +63,6 @@
         LinkedIn
       </a>
     </div>
-
-    <!-- <div class="form">
-      <Form {data} on:send={event => save(event)} />
-    </div> -->
   </div>
 </div>
 
