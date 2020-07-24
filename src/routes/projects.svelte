@@ -7,7 +7,7 @@
   import data from "./_data/projects";
 
   const projects = data;
-  let visible = false;
+  let visible = true;
 
   afterUpdate(() => {
     setTimeout(() => {
