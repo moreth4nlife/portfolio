@@ -49,6 +49,15 @@
   @media screen and (max-width: 667px) {
     footer {
       position: relative;
+      padding: 0 0 1rem 0;
+      width: 100%;
+    }
+    footer .navigation {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    footer nav {
+      margin: 0 0 1rem 0;
     }
   }
   .py-1:first-child {
@@ -66,7 +75,9 @@
     </div>
   {/if}
 
-  <div class="flex space-between" in:fly={{ y: 200, duration: 1000 }}>
+  <div
+    class="flex space-between navigation"
+    in:fly={{ y: 200, duration: 1000 }}>
     <nav>
       {#each links as link, index}
         {#if index !== 0}
