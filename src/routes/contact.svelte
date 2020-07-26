@@ -7,7 +7,7 @@
 
 <style>
   h2 {
-    color: #333;
+    color: var(--text-color);
     font-size: 1.5rem;
     font-weight: bolder;
   }

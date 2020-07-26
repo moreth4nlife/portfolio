@@ -32,7 +32,7 @@
   }
   .link:hover {
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.5);
+    opacity: 0.5;
   }
   .page-link {
     margin: 3rem 0;
