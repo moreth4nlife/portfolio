@@ -19,7 +19,7 @@
   }
   .link {
     margin: 0 0.5rem;
-    color: #333;
+    color: var(--text-color);
     font-size: 4rem;
     font-weight: bolder;
     text-transform: capitalize;
@@ -27,7 +27,7 @@
   }
   .link:hover {
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.5);
+    opacity: 0.5;
   }
   @media screen and (max-width: 768px) {
     .link {

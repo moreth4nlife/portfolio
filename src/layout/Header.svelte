@@ -7,8 +7,11 @@
   .logo {
     width: 80px;
     height: 80px;
-    background: url("/images/favicon.svg") no-repeat center;
-    background-size: cover;
+    background-color: var(--text-color);
+    mask: url("/images/favicon.svg") no-repeat center;
+    mask-size: cover;
+    -webkit-mask: url("/images/favicon.svg") no-repeat center;
+    -webkit-mask-size: cover;
     animation: fadeIn 1s ease-in-out;
     transition: all 0.5s ease-in-out;
   }

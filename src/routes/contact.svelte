@@ -13,7 +13,7 @@
   }
   .link {
     margin: 0 0.5rem;
-    color: #333;
+    color: var(--text-color);
     font-size: 1rem;
     text-transform: capitalize;
     transition: all 0.5s ease;
@@ -27,7 +27,7 @@
   }
   .link:hover {
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.5);
+    opacity: 0.5;
   }
   .email {
     font-weight: bolder;
