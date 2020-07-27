@@ -28,21 +28,32 @@ main {
   --text-color: #fff;
 }
 
+.toggle-wrapper {
+  background: var(--text-color);
+  border-radius: 50%;
+}
+.toggle-wrapper.dark {
+  background: var(--text-color);
+}
+
 .toggle-dark {
   position: relative;
   display: block;
   width: 42px;
   height: 42px;
-  border-radius: 50%;
-  background: url("/images/sun.svg") no-repeat center, white;
-  background-size: 18px;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.08), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
+  background-color: var(--bg-color);
+  mask: url("/images/sun.svg") no-repeat center;
+  mask-size: 18px;
+  -webkit-mask: url("/images/sun.svg") no-repeat center;
+  -webkit-mask-size: 18px;
   transition: all 0.5s ease-in-out;
 }
-.dark {
-  background: url("/images/moon.svg") no-repeat center, white;
-  background-size: 18px;
-  transition: all 0.5s ease-in-out;
+.toggle-dark.dark {
+  background-color: var(--bg-color);
+  mask: url("/images/moon.svg") no-repeat center;
+  mask-size: 18px;
+  -webkit-mask: url("/images/moon.svg") no-repeat center;
+  -webkit-mask-size: 18px;
 }
 
 h1,

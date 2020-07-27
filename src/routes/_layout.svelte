@@ -25,11 +25,16 @@
 <main>
   <section class="flex space-between header-wrapper">
     <Header />
-    <label
-      for="dark-mode-toggle"
-      class="toggle-dark"
-      class:dark
-      on:click={() => (dark = !dark)} />
+    <div class="toggle-wrapper" class:dark>
+      <label
+        for="dark-mode-toggle"
+        class="toggle-dark"
+        class:dark
+        on:click={() => {
+          dark = !dark;
+        }} />
+    </div>
+
   </section>
   <slot />
 </main>
