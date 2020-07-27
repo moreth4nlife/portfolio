@@ -46,7 +46,6 @@ main {
   mask-size: 18px;
   -webkit-mask: url("/images/sun.svg") no-repeat center;
   -webkit-mask-size: 18px;
-  transition: all 0.5s ease-in-out;
 }
 .toggle-dark.dark {
   background-color: var(--bg-color);
