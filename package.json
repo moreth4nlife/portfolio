@@ -9,13 +9,11 @@
   },
   "scripts": {
     "build": "sapper build",
-    "export": "sapper export",
+    "export": "sapper export --basepath portfolio",
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test": "run-p --race dev cy:run",
-    "export": "sapper export --basepath portfolio",
-    "deploy": "npm run export && node ./gh-pages.js"
+    "test": "run-p --race dev cy:run"
   },
   "dependencies": {
     "compression": "^1.7.1",
