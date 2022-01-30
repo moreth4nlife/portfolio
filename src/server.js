@@ -8,6 +8,7 @@ const dev = NODE_ENV === "development";
 
 express() // You can also use Express
   .use(
+    process.env.BASE_NAME || "/",
     compression({ threshold: 0 }),
     sirv("static", { dev }),
     sapper.middleware()
