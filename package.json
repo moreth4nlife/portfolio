@@ -2,7 +2,6 @@
   "name": "marcosalves.io",
   "description": "marcosalves.io",
   "version": "0.0.1",
-  "homepage": "https://moreth4nlife/github.io/",
   "engines": {
     "node": "11.10.0",
     "npm": "6.7.0"
@@ -13,7 +12,8 @@
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test": "run-p --race dev cy:run"
+    "test": "run-p --race dev cy:run",
+    "deploy": "npm run clean && npm run export && node ./scripts/deploy.js"
   },
   "dependencies": {
     "compression": "^1.7.1",

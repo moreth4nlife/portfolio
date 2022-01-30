@@ -1,4 +1,4 @@
-# Tipster
+# My portfolio
 
 Portfolio website built with Svelte/Sapper.<br />
 **Checkout it out**: [here](https://marcosalves.io)
