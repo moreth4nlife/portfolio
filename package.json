@@ -2,14 +2,14 @@
   "name": "marcosalves.io",
   "description": "marcosalves.io",
   "version": "0.0.1",
-  "homepage": "https://moreth4nlife/github.io/portfolio",
+  "homepage": "https://moreth4nlife/github.io/",
   "engines": {
     "node": "11.10.0",
     "npm": "6.7.0"
   },
   "scripts": {
     "build": "sapper build",
-    "export": "sapper export --basepath portfolio",
+    "export": "sapper export",
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
