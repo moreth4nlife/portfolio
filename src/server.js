@@ -6,11 +6,9 @@ import * as sapper from "@sapper/server";
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
 
-const url = dev ? "/" : "portfolio";
-
 express() // You can also use Express
   .use(
-    url,
+    "portfolio",
     compression({ threshold: 0 }),
     sirv("static", { dev }),
     sapper.middleware()
