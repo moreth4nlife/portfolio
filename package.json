@@ -3,10 +3,11 @@
   "description": "marcosalves.io",
   "version": "0.0.1",
   "engines": {
-    "node": "^11.10.0",
+    "node": "14.x",
     "npm": "6.7.0"
   },
   "scripts": {
+    "dev": "sapper dev",
     "build": "sapper build",
     "start": "node __sapper__/build",
     "cy:run": "cypress run",

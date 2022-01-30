@@ -53,7 +53,7 @@ module.exports = {
         {
           test: /\.(svelte|html)$/,
           use: {
-            loader: "sapper-spa/loader",
+            loader: "svelte-loader",
             options: {
               css: false,
               generate: "ssr",
