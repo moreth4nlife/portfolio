@@ -14,7 +14,8 @@
     "test": "run-p --race dev cy:run",
     "clean": "rm -rf ./__sapper__",
     "export": "sapper export",
-    "deploy": "npm run clean && npm run export && node ./scripts/deploy.js"
+    "deploy": "npm run clean && npm run export && node ./scripts/deploy.js",
+    "prod": "npm run build && npm run start"
   },
   "dependencies": {
     "compression": "^1.7.1",
