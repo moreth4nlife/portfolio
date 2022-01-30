@@ -1,7 +1,7 @@
 const ghpages = require("gh-pages");
 
 ghpages.publish(
-  "__sapper__/build",
+  "__sapper__/export/portfolio",
   {
     branch: "gh-pages",
     repo: "https://github.com/moreth4nlife/portfolio.git",
