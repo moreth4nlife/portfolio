@@ -54,7 +54,6 @@ export default function PortraitCell() {
         <span
           style={{
             backdropFilter: 'blur(6px)',
-            background: 'rgba(245, 236, 216, 0.85)',
             fontFamily: 'var(--font-mono)',
             fontSize: '10px',
             letterSpacing: '0.1em',

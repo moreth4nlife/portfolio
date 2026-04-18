@@ -7,6 +7,9 @@ interface Film {
   title: string;
   rating: number;
   year: number;
+  poster?: string;
+  link?: string;
+  image?: string;
 }
 
 const DEFAULT_FILMS = [
@@ -60,46 +63,56 @@ export default function MoviesCell() {
         gridTemplateColumns: 'repeat(4, 1fr)',
         gap: '8px',
       }}>
-        {displayFilms.map((f: any, i) => (
-          <div
-            key={f.title}
-            className="movie-poster"
-            style={{
-              aspectRatio: '2 / 3',
-              borderRadius: 'var(--radius-sm)',
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'flex-end',
-              padding: '8px',
-              color: '#fff',
-              fontFamily: 'var(--font-serif)',
-              fontSize: '11px',
-              lineHeight: '1.1',
-              transition: 'transform 0.3s ease',
-              background: gradients[i],
-              cursor: 'pointer',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-3px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.75))',
-            }} />
-            <span style={{ position: 'relative', zIndex: 1 }}>
-              {f.title}<br />
-              <span style={{ fontSize: '10px' }}>
-                {renderStars(f.rating)}
+        {displayFilms.map((f: any, i) => {
+          const posterUrl = f.poster || f.image;
+          const Component = f.link ? 'a' : 'div';
+          const componentProps = f.link ? { href: f.link, target: '_blank', rel: 'noopener noreferrer' } : {};
+
+          return (
+            <Component
+              key={f.title}
+              className="movie-poster"
+              {...componentProps}
+              style={{
+                aspectRatio: '2 / 3',
+                borderRadius: 'var(--radius-sm)',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'flex-end',
+                padding: '8px',
+                color: '#fff',
+                fontFamily: 'var(--font-serif)',
+                fontSize: '11px',
+                lineHeight: '1.1',
+                transition: 'transform 0.3s ease',
+                background: posterUrl ? `url(${posterUrl})` : gradients[i],
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.75))',
+              }} />
+              <span style={{ position: 'relative', zIndex: 1 }}>
+                {f.title}<br />
+                <span style={{ fontSize: '10px' }}>
+                  {renderStars(f.rating)}
+                </span>
               </span>
-            </span>
-          </div>
-        ))}
+            </Component>
+          );
+        })}
       </div>
     </Cell>
   );

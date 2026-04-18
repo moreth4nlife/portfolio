@@ -1,10 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as cheerio from 'cheerio';
 
-// This is a mock implementation since Letterboxd doesn't have an official API
-// You can either:
-// 1. Manually update this list
-// 2. Use a web scraping service
-// 3. Integrate with a Letterboxd unofficial API
+export async function getLetterboxdTop4(username: string) {
+  const response = await fetch(`https://letterboxd.com/${username}/`, {
+    next: { revalidate: 3600 } // Cache for 1 hour
+  });
+  const html = await response.text();
+  const $ = cheerio.load(html);
+
+  const top4: any[] = [];
+
+  // Selector for the "Favorite Films" section on the profile page
+  $('.profile-favorite-films .poster-container').each((i, el) => {
+    if (i < 4) {
+      const title = $(el).find('img').attr('alt');
+      const poster = $(el).find('img').attr('src');
+      const link = "https://letterboxd.com" + $(el).find('a').attr('href');
+      top4.push({ title, poster, link });
+    }
+  });
+
+  return top4;
+}
 
 const MOCK_FILMS = [
   {
@@ -39,18 +56,33 @@ const MOCK_FILMS = [
 
 export async function GET(request: NextRequest) {
   try {
-    // Return mock data
-    // To integrate with real Letterboxd data, you would need to:
-    // 1. Use an unofficial Letterboxd API like letterboxd-api
-    // 2. Or set up web scraping
-    // 3. Or manually maintain the list
+    const username = process.env.LETTERBOXD_USERNAME;
 
-    return NextResponse.json(MOCK_FILMS);
+    if (!username) {
+      // Return mock data if username not configured
+      return NextResponse.json(MOCK_FILMS);
+    }
+
+    const films = await getLetterboxdTop4(username);
+
+    // If scraping returns empty, fall back to mock data
+    if (!films || films.length === 0) {
+      return NextResponse.json(MOCK_FILMS);
+    }
+
+    // Transform scraped data to match expected format
+    const transformedFilms = films.map((film: any) => ({
+      title: film.title,
+      poster: film.poster,
+      link: film.link,
+      rating: 4, // Cheerio scraping can't easily get ratings
+      year: new Date().getFullYear(),
+    }));
+
+    return NextResponse.json(transformedFilms);
   } catch (error) {
     console.error('Letterboxd API error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch Letterboxd data' },
-      { status: 500 }
-    );
+    // Return mock data on error
+    return NextResponse.json(MOCK_FILMS);
   }
 }
