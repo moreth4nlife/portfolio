@@ -30,7 +30,7 @@ export default function MoviesCell() {
     initialData: DEFAULT_FILMS,
   });
 
-  const displayFilms = films?.slice(0, 4) || DEFAULT_FILMS;
+  const displayFilms = (films && films.length > 0) ? films.slice(0, 4) : DEFAULT_FILMS;
 
   const gradients = [
     'linear-gradient(160deg, #8A3A1E, #1C0A06)',
