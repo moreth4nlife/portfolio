@@ -99,13 +99,7 @@ export default function StillLifeCell() {
           <div className="label">08 — Still life</div>
           <span className="label" style={{ color: 'var(--ink-soft)', fontSize: '10px' }}>shot on iphone · porto</span>
         </div>
-        <div style={{
-          flex: 1,
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '12px',
-          minHeight: 0,
-        }}>
+        <div className="stilllife-grid">
           {shots.map((s) => (
             <figure
               key={s.id}

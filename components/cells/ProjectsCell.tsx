@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Cell from '../Cell';
 import ProjectModal from '../ProjectModal';
 
@@ -23,7 +24,20 @@ interface Project {
   sections: ProjectSection[];
 }
 
-const PROJECTS: Project[] = [
+interface SanityProject {
+  _id: string;
+  title: string;
+  shortDescription: string;
+  fullDescription: string;
+  technologies: string[];
+  imageUrl?: string;
+  caseStudy: string;
+  link: string;
+  featured: boolean;
+  order: number;
+}
+
+const DEFAULT_PROJECTS: Project[] = [
   {
     id: 'project-01',
     num: '01',
@@ -38,67 +52,7 @@ const PROJECTS: Project[] = [
     sections: [
       {
         heading: 'Challenge',
-        body: 'The client needed a scalable analytics platform that could handle millions of data points while maintaining responsive performance. The previous system suffered from slow load times and limited interactivity.',
-      },
-      {
-        heading: 'Solution',
-        body: 'Built a modern React application with server-side rendering for optimal performance. Implemented virtualization for large datasets and integrated D3.js for complex data visualizations. Added real-time WebSocket updates for live dashboard data.',
-      },
-      {
-        heading: 'Result',
-        body: 'Reduced initial load time by 60% and improved data rendering performance by 80%. The platform now handles 10M+ data points without degradation. Client adoption increased by 40% within the first month.',
-      },
-    ],
-  },
-  {
-    id: 'project-02',
-    num: '02',
-    title: 'Flux Mobile App',
-    subtitle: 'Social Commerce',
-    year: '2023',
-    role: 'Full Stack Developer',
-    stack: ['React Native', 'Node.js', 'PostgreSQL', 'Firebase'],
-    link: 'https://example.com/flux',
-    cover: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    summary: 'A social commerce mobile application connecting creators with consumers through live shopping experiences.',
-    sections: [
-      {
-        heading: 'Challenge',
-        body: 'Creating a seamless experience for live shopping events with real-time inventory sync, payment processing, and social features across iOS and Android.',
-      },
-      {
-        heading: 'Solution',
-        body: 'Developed a cross-platform mobile application using React Native with native modules for camera and payment integrations. Built real-time infrastructure using Node.js and WebSockets for live event management.',
-      },
-      {
-        heading: 'Result',
-        body: 'Launched to 50K+ users with 90% retention rate. Processed $2M+ in transactions in the first quarter. Featured in App Store and Google Play Store.',
-      },
-    ],
-  },
-  {
-    id: 'project-03',
-    num: '03',
-    title: 'Zenith Design System',
-    subtitle: 'Enterprise Component Library',
-    year: '2023',
-    role: 'Design System Lead',
-    stack: ['React', 'TypeScript', 'Storybook', 'CSS-in-JS'],
-    link: 'https://example.com/zenith',
-    cover: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    summary: 'A comprehensive design system and component library serving 15+ internal products at enterprise scale.',
-    sections: [
-      {
-        heading: 'Challenge',
-        body: 'Multiple product teams were building inconsistent UIs with duplicated code. There was no single source of truth for design tokens or components, leading to maintenance nightmares.',
-      },
-      {
-        heading: 'Solution',
-        body: 'Created a centralized design system with 50+ production-ready components. Implemented design tokens, accessibility standards (WCAG 2.1), and comprehensive documentation with Storybook.',
-      },
-      {
-        heading: 'Result',
-        body: 'Reduced component development time by 70% across teams. Improved accessibility compliance to 100%. Adopted by 15+ products, eliminating 40+ hours of duplicate work monthly.',
+        body: 'The client needed a scalable analytics platform that could handle millions of data points while maintaining responsive performance.',
       },
     ],
   },
@@ -106,6 +60,31 @@ const PROJECTS: Project[] = [
 
 export default function ProjectsCell() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const { data: sanityProjects = [] } = useQuery<SanityProject[]>({
+    queryKey: ['projects'],
+    queryFn: async () => {
+      const res = await fetch('/api/projects');
+      return res.json();
+    },
+    staleTime: 3600000, // 1 hour
+  });
+
+  const projects: Project[] = sanityProjects.length > 0
+    ? sanityProjects.map((p, idx) => ({
+        id: p._id,
+        num: String(idx + 1).padStart(2, '0'),
+        title: p.title,
+        subtitle: p.shortDescription || '',
+        year: new Date().getFullYear().toString(),
+        role: 'Developer',
+        stack: p.technologies || [],
+        link: p.link || '#',
+        cover: p.imageUrl || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        summary: p.shortDescription || '',
+        sections: p.caseStudy ? [{ heading: 'Overview', body: p.caseStudy }] : [],
+      }))
+    : DEFAULT_PROJECTS;
 
   return (
     <>
@@ -120,13 +99,8 @@ export default function ProjectsCell() {
             <div className="label">06 — Projects</div>
             <div className="label">SELECT</div>
           </div>
-          <div style={{
-            marginTop: '20px',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '10px',
-          }}>
-            {PROJECTS.map((project) => (
+          <div className="projects-grid">
+            {projects.map((project) => (
               <button
                 key={project.id}
                 onClick={() => setSelectedProject(project)}

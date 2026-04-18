@@ -39,7 +39,7 @@ export default function MusicCell() {
           width: '84px',
           height: '84px',
           borderRadius: 'var(--radius-md)',
-          background: track?.image
+          backgroundImage: track?.image
             ? `url(${track.image})`
             : 'radial-gradient(circle at 30% 30%, #E6C8A8, transparent 55%), radial-gradient(circle at 70% 80%, #7A4A3A, transparent 60%), linear-gradient(135deg, #2A1D18, #4A2E22)',
           backgroundSize: 'cover',

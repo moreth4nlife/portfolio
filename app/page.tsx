@@ -36,11 +36,7 @@ export default function Home() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div style={{
-        maxWidth: '1240px',
-        margin: '0 auto',
-        padding: '40px 32px 80px',
-      }}>
+      <div className="page-container">
         {/* Topbar */}
         <motion.div
           className="topbar"
@@ -57,7 +53,6 @@ export default function Home() {
               className="theme-toggle"
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to light' : 'Switch to dark'}
-              title={isDark ? 'Switch to light' : 'Switch to dark'}
               style={{
                 background: 'none',
                 border: 'none',
@@ -80,12 +75,13 @@ export default function Home() {
                   borderRadius: '999px',
                   transition: 'background 0.3s ease, border-color 0.3s ease',
                   padding: '2px',
+                  overflow: 'hidden',
                 }}
               >
                 <span
                   className="theme-toggle-thumb"
                   style={{
-                    position: 'relative',
+                    position: 'absolute',
                     width: '16px',
                     height: '16px',
                     borderRadius: '50%',
@@ -94,8 +90,9 @@ export default function Home() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    transition: 'margin-left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease, color 0.3s ease',
-                    marginLeft: isDark ? 'auto' : '0',
+                    transition: 'left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease, color 0.3s ease',
+                    left: '2px',
+                    top: '2px',
                   }}
                 >
                   {isDark ? (
@@ -120,7 +117,9 @@ export default function Home() {
               letterSpacing: '0.04em',
               color: 'var(--ink-mute)',
               textTransform: 'uppercase',
-            }}>
+            }}
+            className="topbar-status-text"
+            >
               AVAILABLE · PORTO
             </span>
           </div>
@@ -149,18 +148,6 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '32px 0',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '11px',
-            letterSpacing: '0.04em',
-            textTransform: 'uppercase',
-            color: 'var(--ink-mute)',
-            borderTop: '1px solid var(--line)',
-          }}
         >
           <span>© MMXXVI · MARCOS ALVES</span>
           <span>DESIGNED &amp; BUILT BY HAND</span>

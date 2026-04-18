@@ -1,14 +1,48 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import Cell from '../Cell';
 
+interface Experience {
+  _id: string;
+  company: string;
+  role: string;
+  startDate: string;
+  endDate: string | null;
+  isCurrent: boolean;
+  description?: string;
+  skills?: string[];
+  location?: string;
+}
+
 export default function ExperienceCell() {
-  const exp = [
-    { company: '25Friday', role: 'Frontend Engineer', dates: '2025 — Present', current: true },
-    { company: 'Mercedes-Benz.io', role: 'Frontend Engineer', dates: 'Aug 2022 — Nov 2025' },
-    { company: 'Losch Digital Lab', role: 'Frontend Developer', dates: 'Jun 2019 — Jul 2022' },
-    { company: 'Bodum', role: 'Web Developer', dates: 'Aug 2018 — Jun 2019' },
-  ];
+  const { data: experiences = [] } = useQuery<Experience[]>({
+    queryKey: ['experience'],
+    queryFn: async () => {
+      const res = await fetch('/api/experience');
+      return res.json();
+    },
+    staleTime: 3600000, // 1 hour
+  });
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
+  const formatDateRange = (start: string, end: string | null) => {
+    const startDate = formatDate(start);
+    if (!end) return `${startDate} — Present`;
+    const endDate = formatDate(end);
+    return `${startDate} — ${endDate}`;
+  };
+
+  const exp = experiences.map(e => ({
+    company: e.company,
+    role: e.role,
+    dates: formatDateRange(e.startDate, e.endDate),
+    current: e.isCurrent || !e.endDate,
+  }));
 
   return (
     <Cell className="cell-experience" tilt={true}>

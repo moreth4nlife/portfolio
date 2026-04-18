@@ -20,7 +20,9 @@ async function getAccessToken() {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to get Spotify access token');
+    const errorText = await response.text();
+    console.error('Spotify token error:', response.status, errorText);
+    throw new Error(`Failed to get Spotify access token: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
@@ -44,18 +46,21 @@ export async function GET(request: NextRequest) {
     let track = null;
 
     if (currentlyPlayingResponse.ok) {
-      const data = await currentlyPlayingResponse.json();
-      if (data?.item) {
-        track = {
-          name: data.item.name,
-          artist: data.item.artists[0].name,
-          album: data.item.album.name,
-          image: data.item.album.images[0]?.url,
-          uri: data.item.uri,
-          isPlaying: data.is_playing,
-          progress: data.progress_ms,
-          duration: data.item.duration_ms,
-        };
+      const responseText = await currentlyPlayingResponse.text();
+      if (responseText) {
+        const data = JSON.parse(responseText);
+        if (data?.item) {
+          track = {
+            name: data.item.name,
+            artist: data.item.artists[0].name,
+            album: data.item.album.name,
+            image: data.item.album.images[0]?.url,
+            uri: data.item.uri,
+            isPlaying: data.is_playing,
+            progress: data.progress_ms,
+            duration: data.item.duration_ms,
+          };
+        }
       }
     }
 
@@ -71,28 +76,32 @@ export async function GET(request: NextRequest) {
       );
 
       if (recentResponse.ok) {
-        const data = await recentResponse.json();
-        if (data?.items?.[0]) {
-          const item = data.items[0].track;
-          track = {
-            name: item.name,
-            artist: item.artists[0].name,
-            album: item.album.name,
-            image: item.album.images[0]?.url,
-            uri: item.uri,
-            isPlaying: false,
-            progress: 0,
-            duration: item.duration_ms,
-          };
+        const responseText = await recentResponse.text();
+        if (responseText) {
+          const data = JSON.parse(responseText);
+          if (data?.items?.[0]) {
+            const item = data.items[0].track;
+            track = {
+              name: item.name,
+              artist: item.artists[0].name,
+              album: item.album.name,
+              image: item.album.images[0]?.url,
+              uri: item.uri,
+              isPlaying: false,
+              progress: 0,
+              duration: item.duration_ms,
+            };
+          }
         }
       }
     }
 
     return NextResponse.json(track || { error: 'No track found' });
   } catch (error) {
-    console.error('Spotify API error:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Spotify API error:', errorMessage);
     return NextResponse.json(
-      { error: 'Failed to fetch Spotify data' },
+      { error: 'Failed to fetch Spotify data', details: errorMessage },
       { status: 500 }
     );
   }
