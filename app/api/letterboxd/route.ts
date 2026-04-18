@@ -1,10 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 
+async function getTmdbPoster(filmTitle: string): Promise<string | null> {
+  const tmdbApiKey = process.env.TMDB_API_KEY;
+  if (!tmdbApiKey) {
+    console.log('TMDB_API_KEY not set');
+    return null;
+  }
+
+  try {
+    // Remove year from title if present (e.g., "Parasite (2019)" -> "Parasite")
+    const cleanTitle = filmTitle.replace(/\s*\(\d{4}\)$/, '');
+
+    const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${tmdbApiKey}&query=${encodeURIComponent(cleanTitle)}`;
+    console.log(`Searching TMDb for: ${cleanTitle}`);
+
+    const searchResponse = await fetch(searchUrl);
+    const searchData = await searchResponse.json();
+
+    if (searchData.results && searchData.results.length > 0) {
+      const firstResult = searchData.results[0];
+      const poster = firstResult.poster_path;
+
+      console.log(`Found TMDb result for "${cleanTitle}": ${firstResult.title}, poster: ${poster ? 'yes' : 'no'}`);
+
+      if (poster) {
+        return `https://image.tmdb.org/t/p/w500${poster}`;
+      }
+    } else {
+      console.log(`No TMDb results found for: ${cleanTitle}`);
+    }
+  } catch (error) {
+    console.error(`Error fetching TMDb poster for ${filmTitle}:`, error);
+  }
+
+  return null;
+}
+
 export async function getLetterboxdTop4(username: string) {
   try {
     const response = await fetch(`https://letterboxd.com/${username}/`, {
-      next: { revalidate: 3600 } // Cache for 1 hour
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
     });
     const html = await response.text();
     const $ = cheerio.load(html);
@@ -21,23 +59,24 @@ export async function getLetterboxdTop4(username: string) {
         if (reactComponent.length > 0) {
           const title = reactComponent.attr('data-item-name');
           const filmLink = reactComponent.attr('data-item-link');
-          const posterUrl = reactComponent.attr('data-poster-url');
 
           if (title && filmLink) {
-            let fullPosterUrl = posterUrl;
-            if (posterUrl && !posterUrl.startsWith('http')) {
-              fullPosterUrl = `https://a.ltrbxd.com${posterUrl}`;
-            }
-
             top4.push({
               title,
-              poster: fullPosterUrl,
               link: `https://letterboxd.com${filmLink}`
             });
           }
         }
       }
     });
+
+    // Fetch posters from TMDb for each film
+    for (const film of top4) {
+      const poster = await getTmdbPoster(film.title);
+      if (poster) {
+        film.poster = poster;
+      }
+    }
 
     console.log(`Scraped ${top4.length} favorite films from ${username}`);
     return top4;

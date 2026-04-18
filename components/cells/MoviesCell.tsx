@@ -27,7 +27,6 @@ export default function MoviesCell() {
       return res.json();
     },
     staleTime: 3600000, // 1 hour
-    initialData: DEFAULT_FILMS,
   });
 
   const displayFilms = (films && films.length > 0) ? films.slice(0, 4) : DEFAULT_FILMS;
