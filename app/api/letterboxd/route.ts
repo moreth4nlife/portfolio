@@ -11,41 +11,35 @@ export async function getLetterboxdTop4(username: string) {
 
     const top4: any[] = [];
 
-    // Try multiple selector patterns for flexibility
-    const selectors = [
-      '.profile-favorite-films .poster-container',
-      '.profile-favorite-films li',
-      '[data-list-item] .poster-container',
-      'li.poster-container',
-    ];
+    // Letterboxd uses data attributes for favorite films
+    // The structure is: .favourite-production-poster-container with data attributes
+    $('.favourite-production-poster-container').each((i, el) => {
+      if (i < 4) {
+        const $el = $(el);
+        const reactComponent = $el.find('[data-component-class="LazyPoster"]');
 
-    for (const selector of selectors) {
-      const items = $(selector);
-      if (items.length > 0) {
-        console.log(`Found ${items.length} items with selector: ${selector}`);
-        items.each((i, el) => {
-          if (i < 4) {
-            const img = $(el).find('img');
-            const anchor = $(el).find('a');
+        if (reactComponent.length > 0) {
+          const title = reactComponent.attr('data-item-name');
+          const filmLink = reactComponent.attr('data-item-link');
+          const posterUrl = reactComponent.attr('data-poster-url');
 
-            const title = img.attr('alt') || img.attr('title');
-            const poster = img.attr('src');
-            const href = anchor.attr('href');
-
-            if (title && poster && href) {
-              top4.push({
-                title,
-                poster,
-                link: href.startsWith('http') ? href : `https://letterboxd.com${href}`
-              });
+          if (title && filmLink) {
+            let fullPosterUrl = posterUrl;
+            if (posterUrl && !posterUrl.startsWith('http')) {
+              fullPosterUrl = `https://a.ltrbxd.com${posterUrl}`;
             }
-          }
-        });
-        break;
-      }
-    }
 
-    console.log(`Scraped ${top4.length} films from ${username}`);
+            top4.push({
+              title,
+              poster: fullPosterUrl,
+              link: `https://letterboxd.com${filmLink}`
+            });
+          }
+        }
+      }
+    });
+
+    console.log(`Scraped ${top4.length} favorite films from ${username}`);
     return top4;
   } catch (error) {
     console.error(`Error fetching Letterboxd data for ${username}:`, error);
