@@ -2,25 +2,55 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 
 export async function getLetterboxdTop4(username: string) {
-  const response = await fetch(`https://letterboxd.com/${username}/`, {
-    next: { revalidate: 3600 } // Cache for 1 hour
-  });
-  const html = await response.text();
-  const $ = cheerio.load(html);
+  try {
+    const response = await fetch(`https://letterboxd.com/${username}/`, {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
+    const html = await response.text();
+    const $ = cheerio.load(html);
 
-  const top4: any[] = [];
+    const top4: any[] = [];
 
-  // Selector for the "Favorite Films" section on the profile page
-  $('.profile-favorite-films .poster-container').each((i, el) => {
-    if (i < 4) {
-      const title = $(el).find('img').attr('alt');
-      const poster = $(el).find('img').attr('src');
-      const link = "https://letterboxd.com" + $(el).find('a').attr('href');
-      top4.push({ title, poster, link });
+    // Try multiple selector patterns for flexibility
+    const selectors = [
+      '.profile-favorite-films .poster-container',
+      '.profile-favorite-films li',
+      '[data-list-item] .poster-container',
+      'li.poster-container',
+    ];
+
+    for (const selector of selectors) {
+      const items = $(selector);
+      if (items.length > 0) {
+        console.log(`Found ${items.length} items with selector: ${selector}`);
+        items.each((i, el) => {
+          if (i < 4) {
+            const img = $(el).find('img');
+            const anchor = $(el).find('a');
+
+            const title = img.attr('alt') || img.attr('title');
+            const poster = img.attr('src');
+            const href = anchor.attr('href');
+
+            if (title && poster && href) {
+              top4.push({
+                title,
+                poster,
+                link: href.startsWith('http') ? href : `https://letterboxd.com${href}`
+              });
+            }
+          }
+        });
+        break;
+      }
     }
-  });
 
-  return top4;
+    console.log(`Scraped ${top4.length} films from ${username}`);
+    return top4;
+  } catch (error) {
+    console.error(`Error fetching Letterboxd data for ${username}:`, error);
+    return [];
+  }
 }
 
 const MOCK_FILMS = [
@@ -59,14 +89,16 @@ export async function GET(request: NextRequest) {
     const username = process.env.LETTERBOXD_USERNAME;
 
     if (!username) {
-      // Return mock data if username not configured
+      console.log('No LETTERBOXD_USERNAME set, using mock data');
       return NextResponse.json(MOCK_FILMS);
     }
 
+    console.log(`Fetching Letterboxd data for username: ${username}`);
     const films = await getLetterboxdTop4(username);
 
     // If scraping returns empty, fall back to mock data
     if (!films || films.length === 0) {
+      console.log('No films scraped, falling back to mock data');
       return NextResponse.json(MOCK_FILMS);
     }
 
@@ -79,6 +111,7 @@ export async function GET(request: NextRequest) {
       year: new Date().getFullYear(),
     }));
 
+    console.log(`Returning ${transformedFilms.length} real films`);
     return NextResponse.json(transformedFilms);
   } catch (error) {
     console.error('Letterboxd API error:', error);
